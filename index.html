@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Display LINE User ID</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        #userId { font-size: 18px; color: #333; }
+        #error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Your LINE User ID</h1>
+    <p id="userId">Loading...</p>
+    <p id="error"></p>
+
+    <!-- Include the LIFF SDK -->
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        // Initialize the LIFF app
+        liff.init({
+            liffId: "YOUR_LIFF_ID" // Replace with your actual LIFF ID
+        }).then(() => {
+            // Check if the user is logged in
+            if (liff.isLoggedIn()) {
+                // Get the user's profile
+                liff.getProfile().then(profile => {
+                    const userId = profile.userId;
+                    document.getElementById('userId').textContent = userId;
+                }).catch(error => {
+                    console.error('Error getting profile:', error);
+                    document.getElementById('error').textContent = 'Failed to get profile information.';
+                });
+            } else {
+                // Prompt the user to log in
+                liff.login();
+            }
+        }).catch(error => {
+            console.error('LIFF Initialization failed:', error);
+            document.getElementById('error').textContent = 'LIFF Initialization failed.';
+        });
+    </script>
+</body>
+</html>
